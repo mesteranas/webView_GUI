@@ -38,6 +38,14 @@ class main (qt.QMainWindow):
         web.addAction(refreshPage)
         refreshPage.triggered.connect(self.refresh_page)
         refreshPage.setShortcut("f5")
+        back= qt1.QAction(_("back"), self)
+        web.addAction(back)
+        back.triggered.connect(self.on_back)
+        back.setShortcut("alt+left")
+        forward= qt1.QAction(_("forward"), self)
+        web.addAction(forward)
+        forward.triggered.connect(self.on_forward)
+        forward.setShortcut("alt+right")
         help=mb.addMenu(_("help"))
         helpFile=qt1.QAction(_("help file"),self)
         help.addAction(helpFile)
@@ -112,6 +120,28 @@ class main (qt.QMainWindow):
         menu.exec()
     def On_close_tab(self):
         self.tabs.removeTab(self.tabs.currentIndex())
+    def on_back(self):
+        current_index = self.tabs.currentIndex()
+        if current_index != -1:
+            current_widget = self.tabs.widget(current_index)
+            if isinstance(current_widget, qt.QWidget):
+                layout = current_widget.layout()
+                if layout is not None and layout.count() > 0:
+                    web_view = layout.itemAt(0).widget()
+                    if isinstance(web_view, QWebEngineView):
+                        web_view.back()
+    def on_forward(self):
+        current_index = self.tabs.currentIndex()
+        if current_index != -1:
+            current_widget = self.tabs.widget(current_index)
+            if isinstance(current_widget, qt.QWidget):
+                layout = current_widget.layout()
+                if layout is not None and layout.count() > 0:
+                    web_view = layout.itemAt(0).widget()
+                    if isinstance(web_view, QWebEngineView):
+                        web_view.forward()
+
+
 App=qt.QApplication(sys.argv)
 w=main()
 w.show()
